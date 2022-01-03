@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+
+      #input:focus {
+        outline: none;
+      }
+
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img
+      src="https://lh3.googleusercontent.com/5BcKfa1h9tAPPyBPerc_mE7g1xFSTjrFKDXvKi5kaFiF-1Fc1p8cUM5ZUwFs9t6LN67X1xK11z9u0DDpi4KHZXdivzrkAluOYdfweufn5HEosPqRpmsVKvTCC3aV9duHQFLhgayaGKtpQhWgnVH1pgY7IR8MzO_TFCXVZsYrXyqDqz-hsswf82nHE3qe6Jld6crRdhalxFJPNl4JkmfDWVStlIxr_D6KPGq_2ZTii-uYzucGKwsJe0eL1xFPAmK2bIv5RtyY3P-X0mHS8uQ6pqsHBFZR92V6EKr97xNOkCWyMlGJhyWH8iS7KtiQ9b-iuTtG_RWZvHvZdphPa4dFpfuUOWnR16xT2KExzayeXSxyl_14kV9XoZdSYp653DK7AD-KbTLLT5mQW36pjVmG_l6DKjavm6z5Rsb9t-zSr1-TZWNEFXU1Uz0CwfDH59xHot3AeELeT3A3We7D3mU1P8pATdUfMq3JXc58JYq99jTouzUJ7juy-L0H8SsSZqLSlrgoSQdf49scc1smmrDlGddotLQwtIHh1eqgzbd-0mY6acAYLIn31o67giGM7Ap_SGHsfrHCISQxweqAd6Wo3eb-MCJxtnxJaSFteVuLat2J_uv7ekOCMMyyfvUSli3Jm3wdbghVH6Twjc5zFCe-2aGpaa0AVWnhkiIlENfccJrYVpSC9KXE4p3Voh9ovfVcKRCOpp4LjYtwHW9qOo9u7SqxvQ=s625-no?authuser=0"
+      width="400px"
+    />
+    <ul id="messages">
+      COMMENTs
+    </ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById("messages");
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log(input.value);
+        if (input.value) {
+          socket.emit("message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", function (data) {
+        while (messages.firstChild) {
+          messages.removeChild(messages.firstChild);
+        }
+        data.forEach((element) => {
+          var item = document.createElement("li");
+          item.textContent = element.Message;
+          messages.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+  </body>
+</html>
